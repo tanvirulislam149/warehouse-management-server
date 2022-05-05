@@ -29,7 +29,7 @@ async function run() {
 
         app.get("/items", async (req, res) => {
             const query = {};
-            const cursor = productCollection.find({ name: { $in: ["ONION", "POTATO", "APPLE", "BANANA", "Rupchanda Soyabean Oil", "Musturd Oil"] } })
+            const cursor = productCollection.find({ name: { $in: ["ONION", "POTATO", "APPLE", "BANANA", "Rupchanda Soyabean Oil", "Mustard Oil"] } })
             const result = await cursor.toArray();
             res.send(result);
         })
