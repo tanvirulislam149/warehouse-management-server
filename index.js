@@ -87,6 +87,14 @@ async function run() {
             res.send(cursor);
         })
 
+        app.get("/myitems", async (req, res) => {
+            const user = req.query.user;
+            const query = { userName: user };
+            const cursor = productCollection.find(query);
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
     }
     finally {
 
