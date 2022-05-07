@@ -20,7 +20,7 @@ async function run() {
         const productCollection = client.db("warehouse").collection("products");
 
 
-        app.get("/", async (req, res) => {
+        app.get("/updateCheck", async (req, res) => {
             res.send("running warehouse management server from heroku");
         })
 
