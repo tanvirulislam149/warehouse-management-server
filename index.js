@@ -4,11 +4,26 @@ require('dotenv').config()
 var cors = require('cors')
 const app = express();
 const port = process.env.PORT || 5000;
+var jwt = require('jsonwebtoken');
 
 
 // middleware
 app.use(cors())
 app.use(express.json());
+
+function verifyJWT(req, res, next) {
+    const authHeaders = req.headers.authorization;
+    if (!authHeaders) {
+        return res.status(401).send({ message: "unauthorized access" })
+    }
+    jwt.verify(authHeaders, process.env.SECRET_TOKEN, function (err, decoded) {
+        if (err) {
+            return res.status(403).send({ message: "Forbidden Access" })
+        }
+        req.decoded = decoded;
+        next();
+    })
+}
 
 
 
@@ -92,12 +107,24 @@ async function run() {
             res.send(cursor);
         })
 
-        app.get("/myitems", async (req, res) => {
+        app.get("/myitems", verifyJWT, async (req, res) => {
+            const decodedEmail = req.decoded.email;
             const user = req.query.user;
-            const query = { userName: user };
-            const cursor = productCollection.find(query);
-            const result = await cursor.toArray();
-            res.send(result);
+            if (decodedEmail === user) {
+                const query = { userName: user };
+                const cursor = productCollection.find(query);
+                const result = await cursor.toArray();
+                res.send(result);
+            }
+            else {
+                res.send("Forbidden Access")
+            }
+        })
+
+        app.post("/getToken", async (req, res) => {
+            const user = req.body;
+            const token = jwt.sign(user, process.env.SECRET_TOKEN, { expiresIn: "1min" });
+            res.send({ token });
         })
 
     }
