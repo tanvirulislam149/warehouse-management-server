@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken');
 
 
 // middleware
-app.use(cors())
+// app.use(cors())
 app.use(express.json());
 
 function verifyJWT(req, res, next) {
