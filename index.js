@@ -117,13 +117,13 @@ async function run() {
                 res.send(result);
             }
             else {
-                res.send("Forbidden Access")
+                res.status(403).send({ message: "forbidded access" })
             }
         })
 
         app.post("/getToken", async (req, res) => {
             const user = req.body;
-            const token = jwt.sign(user, process.env.SECRET_TOKEN, { expiresIn: "1min" });
+            const token = jwt.sign(user, process.env.SECRET_TOKEN, { expiresIn: "1d" });
             res.send({ token });
         })
 
